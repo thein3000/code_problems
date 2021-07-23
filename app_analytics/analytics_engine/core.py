@@ -23,7 +23,7 @@ def identify_multiple_order_status(data):
 
 def get_date_season(date):
     """Given a datetime.date instance, identify the season."""
-    # Define a common year to not take it into account.
+    # Define a common year so that it is not taken into account.
     COMMON_YEAR = 2000
     date_copy = dt.datetime(date.year, date.month, date.day).date()
     common_year_date = date_copy.replace(year=COMMON_YEAR)
