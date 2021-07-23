@@ -12,12 +12,20 @@ class SeasonDetectionView(APIView):
     def post(self, request):
         """
         Given a list of historic orders, a list is returned with the order's respective seasons.
-        Expected body format:
+        Expected payload format:
         [
             {
                 "ord_id": "111-131311",
                 "ord_dt": "9/23/19",
                 "qt_ordd": 1
+            },
+            ...
+        ]
+        Output format:
+        [
+            {
+                "ord_id": "111-131311",
+                "season": "Fall"
             },
             ...
         ]
@@ -35,6 +43,26 @@ class SeasonDetectionView(APIView):
 class OrderStatusView(APIView):
 
     def post(self, request):
+        """
+        Given a list of order lines, a list is returned with the order's respective overall status.
+        Expected payload format:
+        [
+            {
+                "order_number": "ORD_1567",
+                "item_name": "LAPTOP",
+                "status": "SHIPPED"
+            },
+            ...
+        ]
+        Output format:
+        [
+            {
+                "order_number": "ORD_1567",
+                "status": "PENDING"
+            },
+            ...
+        ]
+        """
         serializer = OrderLineSerializer(data=request.data, many=True)
         if serializer.is_valid():
             analyzed_data = identify_multiple_order_status(serializer.validated_data)
@@ -48,6 +76,25 @@ class OrderStatusView(APIView):
 class WeatherChangeView(APIView):
     
     def post(self, request):
+        """
+        Given a historic list of occurrence of rain, returns a list of dates in which it started raining.
+        Expected payload format:
+        [
+            {
+                "date": "1/1/20",
+                "was_rainy": false
+            },
+            ...
+        ]
+        Output format:
+        [
+            {
+                "date": "23/07/21",
+                "was_rainy": true
+            }
+            ...
+        ]
+        """
         serializer = WeatherSerializer(data=request.data, many=True)
         if serializer.is_valid():
             analyzed_data = detect_weather_changes(serializer.validated_data)
